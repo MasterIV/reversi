@@ -2,7 +2,7 @@
 
 require_once 'ReversiAI.php';
 
-class TurnScoreAi implements ReversiAI {
+class TurnScoreAI implements ReversiAI {
     const BORDER = 4;
 
     private $player;

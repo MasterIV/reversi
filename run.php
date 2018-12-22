@@ -6,7 +6,7 @@ require "v2.php";
 require "board.php";
 
 require_once "ai/RandomAI.php";
-require_once "ai/TurnScoreAi.php";
+require_once "ai/TurnScoreAI.php";
 
 function play($p, $print = false) {
     $turn = null;
@@ -31,7 +31,7 @@ function play($p, $print = false) {
 
 $p = [
     new RandomAI(Board::PLAYER_ONE),
-    new TurnScoreAi(Board::PLAYER_TWO)
+    new TurnScoreAI(Board::PLAYER_TWO)
 ];
 
 $s = [
