@@ -79,6 +79,7 @@ class Board {
         return $result;
     }
 
+    /** @return Turn[] */
     public function possibleTurns($player) {
         $turns = [];
 
@@ -92,6 +93,7 @@ class Board {
         return $turns;
     }
 
+    /** @return Turn|bool */
     public function getTurn($player, V2 $pos) {
         if ($this->fields[$pos->y][$pos->x] != self::FREE)
             return false;

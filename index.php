@@ -2,32 +2,34 @@
 
 session_start();
 
-require "v2.php";
-require "board.php";
+require_once "v2.php";
+require_once "board.php";
+require_once "ai/RandomAI.php";
 
-if(isset($_GET['reset']))
+if (isset($_GET['reset']))
     $_SESSION['board'] = null;
 
+$ai = new RandomAI(Board::PLAYER_TWO);
 $board = $_SESSION['board'] ? Board::read($_SESSION['board']) : new Board();
 $error = $winner = null;
 
-if(!empty($_POST['turn'])) {
+if (!empty($_POST['turn'])) {
     try {
         $board = $board->turn(Board::PLAYER_ONE, new V2($_POST['turn']['x'], $_POST['turn']['y']));
 
         do {
-            $turns = $board->possibleTurns(Board::PLAYER_TWO );
-            if( $turns ) $board->apply($turns[rand(0, count($turns)-1)]);
-            $pt = $board->possibleTurns(Board::PLAYER_TWO );
-        } while(!$pt && $turns);
+            $turn = $ai->turn($board);
+            if ($turn) $board->apply($turn);
+            $pt = $board->possibleTurns(Board::PLAYER_ONE);
+        } while (!$pt && $turn);
 
         // nobody can turn any more
-        if(!$pt && !$turns) {
+        if (!$pt && !$turn) {
             $result = $board->status();
 
-            if($result[Board::PLAYER_ONE] == $result[Board::PLAYER_TWO])
+            if ($result[Board::PLAYER_ONE] == $result[Board::PLAYER_TWO])
                 $winner = 'draw';
-            else if($result[Board::PLAYER_ONE] > $result[Board::PLAYER_TWO])
+            else if ($result[Board::PLAYER_ONE] > $result[Board::PLAYER_TWO])
                 $winner = 'player';
             else
                 $winner = 'computer';
@@ -38,4 +40,4 @@ if(!empty($_POST['turn'])) {
 }
 
 include 'template.php';
-$_SESSION['board'] = $winner ? null : (string) $board;
+$_SESSION['board'] = $winner ? null : (string)$board;
