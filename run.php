@@ -12,8 +12,8 @@ $p = [Board::PLAYER_ONE, Board::PLAYER_TWO];
 echo $b;
 echo "<hr>";
 
-while ($turns = $b->possibleTurns($p[$turn%2])) {
-    $b = $b->turn($p[$turn++%2], $turns[rand(0, count($turns)-1)][0]);
+while ($turns = $b->possibleTurns($p[$turn++%2])) {
+    $b->apply($turns[rand(0, count($turns)-1)]);
     echo $b . "<hr>";
 };
 

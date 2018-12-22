@@ -35,13 +35,21 @@ class Board {
         }, $this->fields));
     }
 
+    public static function read($str) {
+        $board = new self();
+        $board->fields = array_map(function ($l) {
+            return explode(" ", $l);
+        }, explode("\n", $str));
+        return $board;
+    }
+
     public function set(V2 $pos, $value) {
         $this->fields[$pos->y][$pos->x] = $value;
     }
 
-    public function apply($player, Turn $turn) {
+    public function apply(Turn $turn) {
         foreach ($turn->all() as $t)
-            $this->set($t, $player);
+            $this->set($t, $turn->player);
     }
 
     public function turn($player, V2 $pos) {
@@ -53,7 +61,7 @@ class Board {
             throw new Exception("Invalid turn!");
 
         $result = clone $this;
-        $result->apply($player, $turn);
+        $result->apply($turn);
         return $result;
     }
 
@@ -99,7 +107,7 @@ class Board {
             $this->checkChanges($player, $enemy, $pos, new V2(1, -1)),
             $this->checkChanges($player, $enemy, $pos, new V2(-1, -1)));
 
-        return count($tokens) ? new Turn($pos, $tokens) : false;
+        return count($tokens) ? new Turn($player, $pos, $tokens) : false;
     }
 
     private function checkChanges($player, $enemy, V2 $start, V2 $dir) {
